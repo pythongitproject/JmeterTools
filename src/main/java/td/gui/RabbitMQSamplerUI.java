@@ -22,7 +22,7 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
     private JTextField PASSWORD;
     private JTextField QUEUE_NAME;
 
-    // area区域
+    // area区域1
     private JSyntaxTextArea postBodyContent = JSyntaxTextArea.getInstance(30, 50);
     // 滚动条
     private JTextScrollPane textPanel = JTextScrollPane.getInstance(postBodyContent);
