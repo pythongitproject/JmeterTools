@@ -21,9 +21,15 @@ public class KafkaSamplerUI extends AbstractSamplerGui {
     /**
      * 基本参数
      */
+    //domain
     private final JLabeledTextField brokersField = new JLabeledTextField("Brokers");
+    //Virtual Hosts
+
+    //port
     private final JLabeledTextField topicField = new JLabeledTextField("Topic");
+    //username
     private final JLabeledTextField messageSerializerField = new JLabeledTextField("Message Serializer");
+    //password
     private final JLabeledTextField keySerializerField = new JLabeledTextField("Key Serializer");
 
     private final JSyntaxTextArea textMessage = new JSyntaxTextArea(10, 50);
