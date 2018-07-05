@@ -5,6 +5,7 @@ import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.samplers.Sampler;
+import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.util.JMeterUtils;
 
 import java.util.Collection;
@@ -35,6 +36,13 @@ public class UserName extends AbstractFunction{
     @Override
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
         String realName = getXing();
+        if (varName != null) {
+            JMeterVariables vars = getVariables();
+            final String varTrim = varName.execute().trim();
+            if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
+                vars.put(varTrim, realName);
+            }
+        }
         return realName;
     }
 
