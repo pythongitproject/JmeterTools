@@ -36,6 +36,7 @@ public class UserName extends AbstractFunction{
     @Override
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
         String realName = getXing();
+        System.out.println(realName);
         if (varName != null) {
             JMeterVariables vars = getVariables();
             final String varTrim = varName.execute().trim();
