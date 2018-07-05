@@ -32,7 +32,7 @@ public class KafkaSamplerUI extends AbstractSamplerGui {
     //password
     private final JLabeledTextField keySerializerField = new JLabeledTextField("Key Serializer");
 
-    private final JSyntaxTextArea textMessage = new JSyntaxTextArea(10, 50);
+    private final JSyntaxTextArea textMessage = new JSyntaxTextArea(25, 50);
     //请求报文
     private final JLabel textArea = new JLabel("Message");
     private final JTextScrollPane textPanel = new JTextScrollPane(textMessage);
