@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class KafkaSampler extends AbstractSampler implements TestStateListener {
     private static final long serialVersionUID = 1L;
+
     private static final String KAFKA_BROKERS = "kafka.brokers";
     private static final String KAFKA_TOPIC = "kafka.topic";
     //private static final String KAFKA_KEY = "kafka.key";
@@ -26,6 +27,7 @@ public class KafkaSampler extends AbstractSampler implements TestStateListener {
     private static final Logger log = LoggingManager.getLoggerForClass();
 
     public KafkaSampler() {
+
         setName("Kafka sampler");
     }
 
