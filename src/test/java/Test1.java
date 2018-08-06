@@ -2,12 +2,14 @@
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import net.sourceforge.tess4j.util.LoadLibs;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeoutException;
 
@@ -34,7 +36,7 @@ public class Test1 {
     }
 
     public static void main(String[] args) throws Exception {
-        //new一个URL对象
+//        //new一个URL对象
         URL url1 = new URL("https://ld.tuandai.com/user/getVerifyCode?v=0.5135070161282909");
         //打开链接
         HttpURLConnection conn = (HttpURLConnection)url1.openConnection();
@@ -47,18 +49,25 @@ public class Test1 {
         //得到图片的二进制数据，以二进制封装得到数据，具有通用性
         byte[] data = readInputStream(inStream);
         //new一个文件对象用来保存图片，默认保存当前工程根目录
-        File imageFile = new File("qq.jpg");
+        File imageFile = new File("qq.png");
         //创建输出流
         FileOutputStream outStream = new FileOutputStream(imageFile);
         //写入数据
         outStream.write(data);
         //关闭输出流
         outStream.close();
-        File ff = new File("D:\\JavaProjects\\JmeterTools\\qq.jpg");
-        Tesseract instance = new Tesseract();
-        instance.setDatapath("D:\\JavaProjects\\JmeterTools\\qq.jpg");
+        File ff = new File("qq.png");
+        ITesseract instance = new Tesseract();
+        File tessDataFolder = LoadLibs.extractTessResources("tessdata");
+        instance.setLanguage("eng");
+        instance.setDatapath(tessDataFolder.getAbsolutePath());
         //将验证码图片的内容识别为字符串
-        String result = instance.doOCR(ff);
+        String result = null;
+        try {
+            result = instance.doOCR(ff);
+        } catch (TesseractException e) {
+            e.printStackTrace();
+        }
         System.out.printf(result);
 
 
