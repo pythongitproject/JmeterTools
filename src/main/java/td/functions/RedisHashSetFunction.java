@@ -39,21 +39,28 @@ public class RedisHashSetFunction extends AbstractFunction{
     public String execute(SampleResult previousResult, Sampler currentSampler)
             throws InvalidVariableException {
 
-        Jedis jedis = new Jedis("node.td-k8s.com",1379);
-        jedis.auth("mWRK6joVy5No");
-        jedis.connect();
-        jedis.select(Integer.parseInt(database.execute().trim()));
+
+        String db = database.execute().trim();
         String thekey = hash.execute().trim();
         String thefield = key.execute().trim();
         String thevalue = value.execute().trim();
 
-        Long count = jedis.hsetnx(thekey,thefield,thevalue);
-        if(count>0){
-            System.out.println("写入成功："+thekey+":"+thefield+":"+thevalue);
+        if (db ==null || db =="" || thekey ==null || thekey =="" || thefield ==null || thefield =="" || thevalue ==null || thevalue ==""){
+            Jedis jedis = new Jedis("node.td-k8s.com",1379);
+            jedis.auth("mWRK6joVy5No");
+            jedis.connect();
+            jedis.select(Integer.parseInt(db));
+            Long count = jedis.hsetnx(thekey,thefield,thevalue);
+            if(count>0){
+                System.out.println("写入成功："+thekey+":"+thefield+":"+thevalue);
+            }else {
+                System.out.println("写入失败");
+            }
+            return count.toString();
+
         }else {
-            System.out.println("写入失败");
+            return null;
         }
-        return count.toString();
 
     }
 

@@ -39,26 +39,35 @@ public class RedisHashGetFunction extends AbstractFunction{
     public String execute(SampleResult previousResult, Sampler currentSampler)
             throws InvalidVariableException {
 
-        Jedis jedis = new Jedis("node.td-k8s.com",1379);
-        jedis.auth("mWRK6joVy5No");
-        jedis.connect();
-        jedis.select(Integer.parseInt(database.execute().trim()));
+        String db = database.execute().trim();
         String thekey = hash.execute().trim();
         String thefield = key.execute().trim();
 
-        String randString = jedis.hget(thekey,thefield);
+        if (db ==null || db =="" || thekey ==null || thekey =="" || thefield ==null || thefield ==""){
+            Jedis jedis = new Jedis("node.td-k8s.com",1379);
+            jedis.auth("mWRK6joVy5No");
+            jedis.connect();
+            jedis.select(Integer.parseInt(db));
 
 
-        if (varName != null) {
-            JMeterVariables vars = getVariables();
-            final String varTrim = varName.execute().trim();
-            if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
-                vars.put(varTrim, randString);
+            String randString = jedis.hget(thekey,thefield);
+
+
+            if (varName != null) {
+                JMeterVariables vars = getVariables();
+                final String varTrim = varName.execute().trim();
+                if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
+                    vars.put(varTrim, randString);
+                }
             }
+
+            System.out.println(thekey+thefield);
+            return randString;
+        }else {
+            return null;
         }
 
-        System.out.println(thekey+thefield);
-        return randString;
+
 
     }
 

@@ -43,53 +43,56 @@ public class AES128Function extends AbstractFunction {
 
     @Override
     public String execute(SampleResult previousResult, Sampler currentSampler){
-
-
         String content = param.execute().trim();
-        String encryptKey = "thirdplatWebToFeifei20180727MSJDHDFHIERUI@U#$*%*#$@!@#(*(&*";
-        String end = "";
+        if(content == null || content == ""){
+            return null;
+        }else {
+            String encryptKey = "thirdplatWebToFeifei20180727MSJDHDFHIERUI@U#$*%*#$@!@#(*(&*";
+            String end = "";
 
-        KeyGenerator generator = null;
-        try {
-            generator = KeyGenerator.getInstance("AES");
-            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-            secureRandom.setSeed(encryptKey.getBytes());
-            generator.init(128, secureRandom);
-            SecretKey secretKey = generator.generateKey();
-            byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(1, key);
-            byte[] result = cipher.doFinal(content.getBytes());
-            end = Base64.encodeBase64String(result);
-            System.out.println("AES:"+end);
+            KeyGenerator generator = null;
+            try {
+                generator = KeyGenerator.getInstance("AES");
+                SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+                secureRandom.setSeed(encryptKey.getBytes());
+                generator.init(128, secureRandom);
+                SecretKey secretKey = generator.generateKey();
+                byte[] enCodeFormat = secretKey.getEncoded();
+                SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+                Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+                cipher.init(1, key);
+                byte[] result = cipher.doFinal(content.getBytes());
+                end = Base64.encodeBase64String(result);
+                System.out.println("AES:"+end);
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return "";
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-            return "";
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-            return "";
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-            return "";
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-            return "";
-        }
-
-
-        if (varName != null) {
-            JMeterVariables vars = getVariables();
-            final String varTrim = varName.execute().trim();
-            if (vars != null && varTrim.length() > 0) {// vars will be null on TestPlan
-                vars.put(varTrim, end);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return "";
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+                return "";
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+                return "";
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+                return "";
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+                return "";
             }
+
+
+            if (varName != null) {
+                JMeterVariables vars = getVariables();
+                final String varTrim = varName.execute().trim();
+                if (vars != null && varTrim.length() > 0) {// vars will be null on TestPlan
+                    vars.put(varTrim, end);
+                }
+            }
+            return end;
         }
-        return end;
+
 
 
 

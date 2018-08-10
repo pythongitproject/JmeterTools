@@ -36,26 +36,36 @@ public class RedisStringGetFunction extends AbstractFunction{
     @Override
     public String execute(SampleResult previousResult, Sampler currentSampler)
             throws InvalidVariableException {
+        String db = database.execute().trim();
+        String thefield = key.execute().trim();
 
-        Jedis jedis = new Jedis("node.td-k8s.com",1379);
-        jedis.auth("mWRK6joVy5No");
-        jedis.connect();
-        jedis.select(Integer.parseInt(database.execute().trim()));
-        String thekey = key.execute().trim();
+        if (db ==null || db ==""|| thefield ==null || thefield =="") {
 
-        String randString = jedis.get(thekey);
+            Jedis jedis = new Jedis("node.td-k8s.com",1379);
+            jedis.auth("mWRK6joVy5No");
+            jedis.connect();
+            jedis.select(Integer.parseInt(database.execute().trim()));
+            String thekey = key.execute().trim();
+
+            String randString = jedis.get(thekey);
 
 
-        if (varName != null) {
-            JMeterVariables vars = getVariables();
-            final String varTrim = varName.execute().trim();
-            if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
-                vars.put(varTrim, randString);
+            if (varName != null) {
+                JMeterVariables vars = getVariables();
+                final String varTrim = varName.execute().trim();
+                if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
+                    vars.put(varTrim, randString);
+                }
             }
+
+            System.out.println(randString);
+            return randString;
+
+        }else {
+            return null;
         }
 
-        System.out.println(randString);
-        return randString;
+
 
     }
 

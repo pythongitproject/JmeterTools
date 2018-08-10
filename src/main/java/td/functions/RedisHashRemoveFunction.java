@@ -35,16 +35,21 @@ public class RedisHashRemoveFunction extends AbstractFunction{
     public String execute(SampleResult previousResult, Sampler currentSampler)
             throws InvalidVariableException {
 
-        Jedis jedis = new Jedis("node.td-k8s.com",1379);
-        jedis.auth("mWRK6joVy5No");
-        jedis.connect();
-        jedis.select(Integer.parseInt(database.execute().trim()));
+        String db = database.execute().trim();
         String thekey = hash.execute().trim();
 
-        Long randString = jedis.del(thekey);
+        if (db ==null || db =="" || thekey ==null || thekey ==""){
+            Jedis jedis = new Jedis("node.td-k8s.com",1379);
+            jedis.auth("mWRK6joVy5No");
+            jedis.connect();
+            jedis.select(Integer.parseInt(database.execute().trim()));
+            Long randString = jedis.del(thekey);
+            return ""+randString;
+        }else {
+            return null;
+        }
 
 
-        return ""+randString;
 
     }
 

@@ -37,17 +37,23 @@ public class RedisStringSetFunction extends AbstractFunction{
     public String execute(SampleResult previousResult, Sampler currentSampler)
             throws InvalidVariableException {
 
-        Jedis jedis = new Jedis("node.td-k8s.com",1379);
-        jedis.auth("mWRK6joVy5No");
-        jedis.connect();
-        jedis.select(Integer.parseInt(database.execute().trim()));
-        String thekey = key.execute().trim();
+        String db = database.execute().trim();
+        String thefield = key.execute().trim();
         String thevalue = value.execute().trim();
 
-        String randString = jedis.set(thekey,thevalue);
+        if (db ==null || db ==""|| thefield ==null || thefield =="" || thevalue ==null || thevalue =="") {
+            Jedis jedis = new Jedis("node.td-k8s.com",1379);
+            jedis.auth("mWRK6joVy5No");
+            jedis.connect();
+            jedis.select(Integer.parseInt(db));
+            String randString = jedis.set(thefield,thevalue);
 
-        System.out.println(randString);
-        return randString;
+            System.out.println(randString);
+            return randString;
+        }else {
+            return null;
+        }
+
 
     }
 

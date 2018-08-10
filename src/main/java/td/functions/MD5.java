@@ -41,43 +41,49 @@ public class MD5 extends AbstractFunction {
 
     @Override
     public String execute(SampleResult previousResult, Sampler currentSampler) throws InvalidVariableException {
-        try {
+
             String max = param.execute().trim();
-            System.out.println(max);
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(max.getBytes());
-            byte b[] = md.digest();
+            if(max==null || max ==""){
+                return null;
+            }else {
+                try {
+                    System.out.println(max);
+                    MessageDigest md = MessageDigest.getInstance("MD5");
+                    md.update(max.getBytes());
+                    byte b[] = md.digest();
 
-            int i;
+                    int i;
 
-            StringBuffer buf = new StringBuffer("");
-            for (int offset = 0; offset < b.length; offset++) {
-                i = b[offset];
-                if (i < 0){
-                    i += 256;
+                    StringBuffer buf = new StringBuffer("");
+                    for (int offset = 0; offset < b.length; offset++) {
+                        i = b[offset];
+                        if (i < 0){
+                            i += 256;
+                        }
+                        if (i < 16) {
+                            buf.append("0");
+                        }
+                        buf.append(Integer.toHexString(i));
+                    }
+                    //32位加密
+                    System.out.println("md5:"+buf.toString().toLowerCase());
+                    if (varName != null) {
+                        JMeterVariables vars = getVariables();
+                        final String varTrim = varName.execute().trim();
+                        if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
+                            vars.put(varTrim, buf.toString().toLowerCase());
+                        }
+                    }
+
+                    return buf.toString().toLowerCase();
+                    // 16位的加密
+                    //return buf.toString().substring(8, 24);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                    return null;
                 }
-                if (i < 16) {
-                    buf.append("0");
-                }
-                buf.append(Integer.toHexString(i));
             }
-            //32位加密
-            System.out.println("md5:"+buf.toString().toLowerCase());
-            if (varName != null) {
-                JMeterVariables vars = getVariables();
-                final String varTrim = varName.execute().trim();
-                if (vars != null && varTrim.length() > 0){// vars will be null on TestPlan
-                    vars.put(varTrim, buf.toString().toLowerCase());
-                }
-            }
 
-            return buf.toString().toLowerCase();
-            // 16位的加密
-            //return buf.toString().substring(8, 24);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
 
 }
 
