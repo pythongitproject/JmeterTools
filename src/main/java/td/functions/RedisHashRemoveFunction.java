@@ -39,14 +39,16 @@ public class RedisHashRemoveFunction extends AbstractFunction{
         String thekey = hash.execute().trim();
 
         if (db ==null || db =="" || thekey ==null || thekey ==""){
+            return null;
+        }else {
+
+
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
             jedis.select(Integer.parseInt(database.execute().trim()));
             Long randString = jedis.del(thekey);
             return ""+randString;
-        }else {
-            return null;
         }
 
 

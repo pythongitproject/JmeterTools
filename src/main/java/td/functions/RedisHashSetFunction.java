@@ -46,6 +46,10 @@ public class RedisHashSetFunction extends AbstractFunction{
         String thevalue = value.execute().trim();
 
         if (db ==null || db =="" || thekey ==null || thekey =="" || thefield ==null || thefield =="" || thevalue ==null || thevalue ==""){
+            return null;
+
+        }else {
+
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
@@ -57,9 +61,6 @@ public class RedisHashSetFunction extends AbstractFunction{
                 System.out.println("写入失败");
             }
             return count.toString();
-
-        }else {
-            return null;
         }
 
     }

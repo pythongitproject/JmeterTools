@@ -39,6 +39,10 @@ public class RedisStringRemoveFunction extends AbstractFunction{
         String thefield = key.execute().trim();
 
         if (db ==null || db ==""|| thefield ==null || thefield =="") {
+            return null;
+        }else {
+
+
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
@@ -49,8 +53,6 @@ public class RedisStringRemoveFunction extends AbstractFunction{
 
             System.out.println(randString);
             return ""+randString;
-        }else {
-            return null;
         }
 
     }

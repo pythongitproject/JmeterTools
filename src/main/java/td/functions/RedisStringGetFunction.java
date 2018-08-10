@@ -41,6 +41,10 @@ public class RedisStringGetFunction extends AbstractFunction{
 
         if (db ==null || db ==""|| thefield ==null || thefield =="") {
 
+            return null;
+        }else {
+
+
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
@@ -61,8 +65,6 @@ public class RedisStringGetFunction extends AbstractFunction{
             System.out.println(randString);
             return randString;
 
-        }else {
-            return null;
         }
 
 

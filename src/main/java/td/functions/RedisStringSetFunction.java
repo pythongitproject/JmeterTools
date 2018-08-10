@@ -42,6 +42,9 @@ public class RedisStringSetFunction extends AbstractFunction{
         String thevalue = value.execute().trim();
 
         if (db ==null || db ==""|| thefield ==null || thefield =="" || thevalue ==null || thevalue =="") {
+            return null;
+        }else {
+
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
@@ -50,8 +53,6 @@ public class RedisStringSetFunction extends AbstractFunction{
 
             System.out.println(randString);
             return randString;
-        }else {
-            return null;
         }
 
 

@@ -44,6 +44,10 @@ public class RedisHashGetFunction extends AbstractFunction{
         String thefield = key.execute().trim();
 
         if (db ==null || db =="" || thekey ==null || thekey =="" || thefield ==null || thefield ==""){
+            return null;
+        }else {
+
+
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
@@ -63,8 +67,6 @@ public class RedisHashGetFunction extends AbstractFunction{
 
             System.out.println(thekey+thefield);
             return randString;
-        }else {
-            return null;
         }
 
 
