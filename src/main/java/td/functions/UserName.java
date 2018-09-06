@@ -100,7 +100,7 @@ public class UserName extends AbstractFunction{
         bArr[0] = (new Integer(highPos)).byteValue();
         bArr[1] = (new Integer(lowPos)).byteValue();
         try {
-            str = new String(bArr, "GB2312");	//区位码组合成汉字
+            str = new String(bArr, "UTF-8");	//区位码组合成汉字
         } catch (Exception e) {
             e.printStackTrace();
         }

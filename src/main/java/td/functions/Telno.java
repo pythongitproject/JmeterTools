@@ -36,8 +36,8 @@ public class Telno extends AbstractFunction{
 
     @Override
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
-        String[] telFirst="19922,16633".split(",");
-        String first=telFirst[new Random().nextInt(2)];
+        String[] telFirst="19922,16633,18877,13433,13566,17755".split(",");
+        String first=telFirst[new Random().nextInt(6)];
         String second= new Random().nextInt(89999)+100000+"";
         System.out.println("telno:"+first+second);
         if (varName != null) {
