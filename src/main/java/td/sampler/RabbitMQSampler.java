@@ -46,75 +46,75 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
      * @throws IOException
      * @throws TimeoutException
      */
-    private void Broadcast() throws IOException, TimeoutException {
-        //创建连接工厂
-        ConnectionFactory factory = new ConnectionFactory();
-        //创建一个新的连接
-        Connection connection = factory.newConnection();
-        //exchange的类型包括:direct, topic, headers and fanout,我们本例子主要关注的是fanout
-        //fanout类型是指向所有的队列发送消息
-        //以下是创建一个fanout类型的exchange,取名logs
-        Channel channel = connection.createChannel();
-
-        try {
-
-
-            //设置RabbitMQ相关信息
-            System.out.println("getHost:" + this.getHost());
-            factory.setHost(this.getHost());
-            if (this.getPort() != null) {
-                System.out.println("getPort:" + Integer.parseInt(this.getPort()));
-                factory.setPort(Integer.parseInt(this.getPort()));
-            }
-            if (this.getVirtualHost() != null) {
-                System.out.println("getVirtualHost:" + this.getVirtualHost());
-                factory.setVirtualHost(this.getVirtualHost());
-            }
-
-            System.out.println("getUsername:" + this.getUsername());
-
-            factory.setUsername(this.getUsername());
-            System.out.println("getPassword:" + this.getPassword());
-
-            factory.setPassword(this.getPassword());
-
-            logger.info("连接mq:" + this.getHost() + "," + this.getVirtualHost() + "," + this.getExchangeType() + "," + this.getExchangeName());
-
-            if (this.getExchangeType().trim() != null) {
-                //        channel.exchangeDeclare(this.getExchangeName(), BuiltinExchangeType.FANOUT);
-                System.out.println(1);
-                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
-                System.out.println(2);
-            } else {
-                System.out.println(3);
-                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
-                System.out.println(4);
-            }
-
-
-            String message = this.getMessage();
-            System.out.println("getMessage:" + this.getMessage());
-
-            //1.在上个"hello world"例子中,我们用的是channel.basicPublish("", "hello", null, message.getBytes());
-            //这里用了默认的exchanges,一个空字符串 "",在basicPublish这个方法中,第一个参数即是exchange的名称
-            //2.准备向我们命名的exchange发送消息啦
-            System.out.println(5);
-            channel.basicPublish(this.getExchangeName(), "", null, message.getBytes("UTF-8"));
-            logger.info("推送消息:" + message);
-            System.out.println(6);
-            System.out.println("producer send:" + message);
-
-
-        } catch (Exception e) {
-            channel.close();
-            connection.close();
-            System.out.println("异常信息：" + e);
-
-        } finally {
-            channel.close();
-            connection.close();
-        }
-    }
+//    private void Broadcast() throws IOException, TimeoutException {
+//        //创建连接工厂
+//        ConnectionFactory factory = new ConnectionFactory();
+//        //创建一个新的连接
+//        Connection connection = factory.newConnection();
+//        //exchange的类型包括:direct, topic, headers and fanout,我们本例子主要关注的是fanout
+//        //fanout类型是指向所有的队列发送消息
+//        //以下是创建一个fanout类型的exchange,取名logs
+//        Channel channel = connection.createChannel();
+//
+//        try {
+//
+//
+//            //设置RabbitMQ相关信息
+//            System.out.println("getHost:" + this.getHost());
+//            factory.setHost(this.getHost());
+//            if (this.getPort() != null) {
+//                System.out.println("getPort:" + Integer.parseInt(this.getPort()));
+//                factory.setPort(Integer.parseInt(this.getPort()));
+//            }
+//            if (this.getVirtualHost() != null) {
+//                System.out.println("getVirtualHost:" + this.getVirtualHost());
+//                factory.setVirtualHost(this.getVirtualHost());
+//            }
+//
+//            System.out.println("getUsername:" + this.getUsername());
+//
+//            factory.setUsername(this.getUsername());
+//            System.out.println("getPassword:" + this.getPassword());
+//
+//            factory.setPassword(this.getPassword());
+//
+//            logger.info("连接mq:" + this.getHost() + "," + this.getVirtualHost() + "," + this.getExchangeType() + "," + this.getExchangeName());
+//
+//            if (this.getExchangeType().trim() != null) {
+//                //        channel.exchangeDeclare(this.getExchangeName(), BuiltinExchangeType.FANOUT);
+//                System.out.println(1);
+//                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
+//                System.out.println(2);
+//            } else {
+//                System.out.println(3);
+//                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
+//                System.out.println(4);
+//            }
+//
+//
+//            String message = this.getMessage();
+//            System.out.println("getMessage:" + this.getMessage());
+//
+//            //1.在上个"hello world"例子中,我们用的是channel.basicPublish("", "hello", null, message.getBytes());
+//            //这里用了默认的exchanges,一个空字符串 "",在basicPublish这个方法中,第一个参数即是exchange的名称
+//            //2.准备向我们命名的exchange发送消息啦
+//            System.out.println(5);
+//            channel.basicPublish(this.getExchangeName(), "", null, message.getBytes("UTF-8"));
+//            logger.info("推送消息:" + message);
+//            System.out.println(6);
+//            System.out.println("producer send:" + message);
+//
+//
+//        } catch (Exception e) {
+//            channel.close();
+//            connection.close();
+//            System.out.println("异常信息：" + e);
+//
+//        } finally {
+//            channel.close();
+//            connection.close();
+//        }
+//    }
 
     @Override
     public SampleResult sample(Entry entry) {
@@ -122,50 +122,38 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         result.setSampleLabel(getName());
         try {
             result.sampleStart();
-
-            //广播
-//            System.out.println("获取配置信息");
             //创建连接工厂
             ConnectionFactory factory = new ConnectionFactory();
-
             //设置RabbitMQ相关信息
-//            System.out.println("getHost:" + this.getHost());
             factory.setHost(this.getHost());
             if (this.getPort() != null) {
-//                System.out.println("getPort:" + Integer.parseInt(this.getPort()));
                 factory.setPort(Integer.parseInt(this.getPort()));
             }
             if (this.getVirtualHost() != null) {
-//                System.out.println("getVirtualHost:" + this.getVirtualHost());
                 factory.setVirtualHost(this.getVirtualHost());
             }
-
-//            System.out.println("getUsername:" + this.getUsername());
-
             factory.setUsername(this.getUsername());
-//            System.out.println("getPassword:" + this.getPassword());
-
             factory.setPassword(this.getPassword());
 
             System.out.println("连接mq:" + this.getHost() + "," + this.getVirtualHost() + "," + this.getExchangeType() + "," + this.getExchangeName());
 
-            //创建一个新的连接
         Connection connection = factory.newConnection();
-        //exchange的类型包括:direct, topic, headers and fanout,我们本例子主要关注的是fanout
-        //fanout类型是指向所有的队列发送消息
-        //以下是创建一个fanout类型的exchange,取名logs
         Channel channel = connection.createChannel();
 
 
         if (this.getExchangeType().trim() != null) {
-            //        channel.exchangeDeclare(this.getExchangeName(), BuiltinExchangeType.FANOUT);
-//            System.out.println(1);
-            channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
-//            System.out.println(2);
+            System.out.printf("weftb_delay1.0");
+            if("weftb_delay".equals(this.getExchangeName())){
+                System.out.printf("weftb_delay1.1");
+                channel.queueDeclare(this.getExchangeName(), true, false, false, null);
+            }else {
+                System.out.printf("weftb_delay1.2");
+                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
+            }
+
+
         } else {
-//            System.out.println(3);
             channel.queueDeclare(this.getExchangeName(), false, false, false, null);
-//            System.out.println(4);
         }
 
 
