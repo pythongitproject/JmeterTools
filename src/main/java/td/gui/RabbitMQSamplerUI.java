@@ -37,6 +37,13 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
     private final JLabeledTextField ExchangeTypeField = new JLabeledTextField("ExchangeType");
     //ExchangeName
     private final JLabeledTextField ExchangeNameField = new JLabeledTextField("ExchangeName");
+    //QueueName
+    private final JLabeledTextField QueueNameField = new JLabeledTextField("QueueName");
+    //Routingkey
+    private final JLabeledTextField RoutingkeyField = new JLabeledTextField("Routingkey");
+    //Durable
+    private final JLabeledTextField DurableField = new JLabeledTextField("Durable");
+
 
     private final JSyntaxTextArea MessageField = new JSyntaxTextArea(25, 50);
     //请求报文Message
@@ -69,6 +76,10 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
         DPanel.add(VirtualHostField);
         DPanel.add(ExchangeTypeField);
         DPanel.add(ExchangeNameField);
+        DPanel.add(QueueNameField);
+        DPanel.add(RoutingkeyField);
+        DPanel.add(DurableField);
+
 
         JPanel ControlPanel = new VerticalPanel();
         ControlPanel.add(DPanel);
@@ -102,6 +113,10 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
         this.ExchangeTypeField.setText("");
         this.ExchangeNameField.setText("");
         this.MessageField.setText("");
+        this.QueueNameField.setText("");
+        this.RoutingkeyField.setText("");
+        this.DurableField.setText("");
+
     }
 
     @Override
@@ -116,6 +131,10 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
         this.ExchangeTypeField.setText(sampler.getExchangeType());
         this.ExchangeNameField.setText(sampler.getExchangeName());
         this.MessageField.setText(sampler.getMessage());
+        this.QueueNameField.setText(sampler.getQueueName());
+        this.RoutingkeyField.setText(sampler.getRoutingkey());
+        this.DurableField.setText(sampler.getDurable());
+
     }
 
     private void setupSamplerProperties(RabbitMQSampler sampler) {
@@ -128,6 +147,10 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
         sampler.setExchangeType(this.ExchangeTypeField.getText());
         sampler.setExchangeName(this.ExchangeNameField.getText());
         sampler.setMessage(this.MessageField.getText());
+        sampler.setQueueName(this.QueueNameField.getText());
+        sampler.setRoutingkey(this.RoutingkeyField.getText());
+        sampler.setDurable(this.DurableField.getText());
+
     }
 
     @Override

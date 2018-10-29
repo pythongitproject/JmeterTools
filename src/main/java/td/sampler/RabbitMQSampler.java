@@ -31,7 +31,9 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
     private static final String ExchangeType = "fanout";
     private static final String ExchangeName = "userRegisterExchange";
     private static final String Message = "message";
-
+    private static final String QueueName = "hd_commonInvitesendTB";
+    private static final String Routingkey = "hd.commonInvitesendTBQueue";
+    private static final String Durable = "true";
 
 
     public RabbitMQSampler(){
@@ -39,147 +41,22 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         setName("RabbitMQ Sampler");
     }
 
-
-    /**
-     * 广播消息
-     * @return
-     * @throws IOException
-     * @throws TimeoutException
-     */
-//    private void Broadcast() throws IOException, TimeoutException {
-//        //创建连接工厂
-//        ConnectionFactory factory = new ConnectionFactory();
-//        //创建一个新的连接
-//        Connection connection = factory.newConnection();
-//        //exchange的类型包括:direct, topic, headers and fanout,我们本例子主要关注的是fanout
-//        //fanout类型是指向所有的队列发送消息
-//        //以下是创建一个fanout类型的exchange,取名logs
-//        Channel channel = connection.createChannel();
-//
-//        try {
-//
-//
-//            //设置RabbitMQ相关信息
-//            System.out.println("getHost:" + this.getHost());
-//            factory.setHost(this.getHost());
-//            if (this.getPort() != null) {
-//                System.out.println("getPort:" + Integer.parseInt(this.getPort()));
-//                factory.setPort(Integer.parseInt(this.getPort()));
-//            }
-//            if (this.getVirtualHost() != null) {
-//                System.out.println("getVirtualHost:" + this.getVirtualHost());
-//                factory.setVirtualHost(this.getVirtualHost());
-//            }
-//
-//            System.out.println("getUsername:" + this.getUsername());
-//
-//            factory.setUsername(this.getUsername());
-//            System.out.println("getPassword:" + this.getPassword());
-//
-//            factory.setPassword(this.getPassword());
-//
-//            logger.info("连接mq:" + this.getHost() + "," + this.getVirtualHost() + "," + this.getExchangeType() + "," + this.getExchangeName());
-//
-//            if (this.getExchangeType().trim() != null) {
-//                //        channel.exchangeDeclare(this.getExchangeName(), BuiltinExchangeType.FANOUT);
-//                System.out.println(1);
-//                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
-//                System.out.println(2);
-//            } else {
-//                System.out.println(3);
-//                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
-//                System.out.println(4);
-//            }
-//
-//
-//            String message = this.getMessage();
-//            System.out.println("getMessage:" + this.getMessage());
-//
-//            //1.在上个"hello world"例子中,我们用的是channel.basicPublish("", "hello", null, message.getBytes());
-//            //这里用了默认的exchanges,一个空字符串 "",在basicPublish这个方法中,第一个参数即是exchange的名称
-//            //2.准备向我们命名的exchange发送消息啦
-//            System.out.println(5);
-//            channel.basicPublish(this.getExchangeName(), "", null, message.getBytes("UTF-8"));
-//            logger.info("推送消息:" + message);
-//            System.out.println(6);
-//            System.out.println("producer send:" + message);
-//
-//
-//        } catch (Exception e) {
-//            channel.close();
-//            connection.close();
-//            System.out.println("异常信息：" + e);
-//
-//        } finally {
-//            channel.close();
-//            connection.close();
-//        }
-//    }
-
     @Override
     public SampleResult sample(Entry entry) {
         SampleResult result = new SampleResult();
         result.setSampleLabel(getName());
         try {
             result.sampleStart();
-            //创建连接工厂
-            ConnectionFactory factory = new ConnectionFactory();
-            //设置RabbitMQ相关信息
-            factory.setHost(this.getHost());
-            if (this.getPort() != null) {
-                factory.setPort(Integer.parseInt(this.getPort()));
-            }
-            if (this.getVirtualHost() != null) {
-                factory.setVirtualHost(this.getVirtualHost());
-            }
-            factory.setUsername(this.getUsername());
-            factory.setPassword(this.getPassword());
 
-            System.out.println("连接mq:" + this.getHost() + "," + this.getVirtualHost() + "," + this.getExchangeType() + "," + this.getExchangeName());
+            sendMQByType(result);
 
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
-
-
-        if (this.getExchangeType().trim() != null) {
-            System.out.printf("weftb_delay1.0");
-            if("weftb_delay".equals(this.getExchangeName())){
-                System.out.printf("weftb_delay1.1");
-                channel.queueDeclare(this.getExchangeName(), true, false, false, null);
-            }else {
-                System.out.printf("weftb_delay1.2");
-                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
-            }
-
-
-        } else {
-            channel.queueDeclare(this.getExchangeName(), false, false, false, null);
-        }
-
-
-            String message = this.getMessage();
-//        System.out.println("getMessage:" + this.getMessage());
-
-        //1.在上个"hello world"例子中,我们用的是channel.basicPublish("", "hello", null, message.getBytes());
-        //这里用了默认的exchanges,一个空字符串 "",在basicPublish这个方法中,第一个参数即是exchange的名称
-        //2.准备向我们命名的exchange发送消息啦
-        channel.basicPublish(this.getExchangeName(), "", null, message.getBytes("UTF-8"));
-        System.out.println("producer send:" + message);
-        channel.close();
-        connection.close();
-
-
-
-
-
-        result.sampleEnd();
-        result.setSuccessful(true);
-        result.setResponseCodeOK();
+            result.sampleEnd();
+            result.setSuccessful(true);
+            result.setResponseCodeOK();
         } catch (Exception e) {
-            result.sampleEnd(); // stop stopwatch
+            result.sampleEnd();
             result.setSuccessful(false);
             result.setResponseMessage("Exception: " + e);
-            // get stack trace as a String to return as document data
             java.io.StringWriter stringWriter = new java.io.StringWriter();
             e.printStackTrace(new java.io.PrintWriter(stringWriter));
             result.setResponseData(stringWriter.toString(), null);
@@ -187,6 +64,57 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
             result.setResponseCode("FAILED");
         }
         return result;
+    }
+
+    private void sendMQByType(SampleResult result) throws IOException, TimeoutException {
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(this.getHost());
+        if (this.getPort() != null) {
+            factory.setPort(Integer.parseInt(this.getPort()));
+        }
+        if (this.getVirtualHost() != null) {
+            factory.setVirtualHost(this.getVirtualHost());
+        }
+        factory.setUsername(this.getUsername());
+        factory.setPassword(this.getPassword());
+
+        System.out.println("连接mq:" + this.getHost() + "," + this.getVirtualHost() + ","
+                + this.getExchangeType() + "," + this.getExchangeName() + "," + this.getQueueName() + "," + this.getRoutingkey() + "," + this.getDurable() );
+
+        Connection connection = factory.newConnection();
+        Channel channel = connection.createChannel();
+        try {
+
+            if("fanout".equals(this.getExchangeType().toLowerCase())){
+                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
+                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
+                channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
+            }else if("direct".equals(this.getExchangeType().toLowerCase())) {
+                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType(), Boolean.parseBoolean(this.getDurable()),false,null);
+                channel.queueBind(this.getQueueName(), this.getExchangeName(), this.getQueueName());
+                channel.basicPublish(this.getExchangeName(), this.getRoutingkey(), null, this.getMessage().getBytes("UTF-8"));
+            }else {
+                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
+                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
+                channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.sampleEnd();
+            result.setSuccessful(false);
+            result.setResponseMessage("Exception: " + e);
+            java.io.StringWriter stringWriter = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(stringWriter));
+            result.setResponseData(stringWriter.toString(), null);
+            result.setDataType(org.apache.jmeter.samplers.SampleResult.TEXT);
+            result.setResponseCode("FAILED");
+        }finally {
+            channel.close();
+            connection.close();
+        }
+
     }
 
 
@@ -248,13 +176,23 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         setProperty(ExchangeName, exchangeName);
     }
 
-    public String getMessage() {
-        return getPropertyAsString(Message);
-    }
+    public String getMessage() { return getPropertyAsString(Message); }
 
-    public void setMessage(String message) {
-        setProperty(Message, message);
-    }
+    public void setMessage(String message) {setProperty(Message, message); }
+
+
+    public void setQueueName(String queueName) {setProperty(QueueName, queueName); }
+
+    public void setRoutingkey(String routingkey) {setProperty(Routingkey, routingkey); }
+
+    public void setDurable(String durable) {setProperty(Durable, durable); }
+
+
+    public  String getQueueName() {return QueueName; }
+
+    public  String getRoutingkey() {return Routingkey; }
+
+    public  String getDurable() { return Durable; }
 
     @Override
     public void testStarted() {}
