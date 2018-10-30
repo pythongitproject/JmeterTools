@@ -50,9 +50,6 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
 
             sendMQByType(result);
 
-            result.sampleEnd();
-            result.setSuccessful(true);
-            result.setResponseCodeOK();
         } catch (Exception e) {
             result.sampleEnd();
             result.setSuccessful(false);
@@ -78,9 +75,15 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         }
         factory.setUsername(this.getUsername());
         factory.setPassword(this.getPassword());
-
-        System.out.println("连接mq:" + this.getHost() + "," + this.getVirtualHost() + ","
-                + this.getExchangeType() + "," + this.getExchangeName() + "," + this.getQueueName() + "," + this.getRoutingkey() + "," + this.getDurable() );
+        String MQ_MSG = new StringBuilder()
+                .append("Host: ").append(this.getHost()).append("\n")
+                .append("VirtualHost: ").append(this.getVirtualHost()).append("\n")
+                .append("ExchangeType: ").append(this.getExchangeType()).append("\n")
+                .append("ExchangeName: ").append(this.getExchangeName()).append("\n")
+                .append("QueueName: ").append(this.getQueueName()).append("\n")
+                .append("Routingkey：").append(this.getRoutingkey()).append("\n")
+                .append("Durable：").append(this.getDurable()).append("\n")
+                .append("Message: ").append(this.getMessage()).append("\n").toString();
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
@@ -99,6 +102,11 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
                 channel.queueDeclare(this.getExchangeName(), false, false, false, null);
                 channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
             }
+            result.sampleEnd();
+            result.setSuccessful(true);
+            result.setRequestHeaders(MQ_MSG);
+            result.setResponseData("MQ消息发送成功", "utf-8");
+            result.setResponseCodeOK();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,11 +196,11 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
     public void setDurable(String durable) {setProperty(Durable, durable); }
 
 
-    public  String getQueueName() {return QueueName; }
+    public  String getQueueName() {return getPropertyAsString(QueueName); }
 
-    public  String getRoutingkey() {return Routingkey; }
+    public  String getRoutingkey() {return getPropertyAsString(Routingkey); }
 
-    public  String getDurable() { return Durable; }
+    public  String getDurable() { return getPropertyAsString(Durable); }
 
     @Override
     public void testStarted() {}

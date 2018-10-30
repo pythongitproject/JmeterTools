@@ -24,30 +24,30 @@ public class RabbitMQSamplerUI extends AbstractSamplerGui {
      * 基本参数
      */
     //Host
-    private final JLabeledTextField HostField = new JLabeledTextField("Host");
+    private final JLabeledTextField HostField = new JLabeledTextField("Host：");
     //port
-    private final JLabeledTextField PortField = new JLabeledTextField("Port");
+    private final JLabeledTextField PortField = new JLabeledTextField("Port：");
     //username
-    private final JLabeledTextField VirtualHostField = new JLabeledTextField("VirtualHost");
+    private final JLabeledTextField VirtualHostField = new JLabeledTextField("VirtualHost：");
     //password
-    private final JLabeledTextField UsernameField = new JLabeledTextField("Username");
+    private final JLabeledTextField UsernameField = new JLabeledTextField("Username：");
     //Password
-    private final JLabeledTextField PasswordrField = new JLabeledTextField("Password");
+    private final JLabeledTextField PasswordrField = new JLabeledTextField("Password：");
     //ExchangeType
-    private final JLabeledTextField ExchangeTypeField = new JLabeledTextField("ExchangeType");
+    private final JLabeledTextField ExchangeTypeField = new JLabeledTextField("ExchangeType：");
     //ExchangeName
-    private final JLabeledTextField ExchangeNameField = new JLabeledTextField("ExchangeName");
+    private final JLabeledTextField ExchangeNameField = new JLabeledTextField("ExchangeName：");
     //QueueName
-    private final JLabeledTextField QueueNameField = new JLabeledTextField("QueueName");
+    private final JLabeledTextField QueueNameField = new JLabeledTextField("QueueName：");
     //Routingkey
-    private final JLabeledTextField RoutingkeyField = new JLabeledTextField("Routingkey");
+    private final JLabeledTextField RoutingkeyField = new JLabeledTextField("Routingkey：");
     //Durable
-    private final JLabeledTextField DurableField = new JLabeledTextField("Durable");
+    private final JLabeledTextField DurableField = new JLabeledTextField("Durable：");
 
 
     private final JSyntaxTextArea MessageField = new JSyntaxTextArea(25, 50);
     //请求报文Message
-    private final JLabel textArea = new JLabel("Message");
+    private final JLabel textArea = new JLabel("Message：");
     private final JTextScrollPane textPanel = new JTextScrollPane(MessageField);
 
     public RabbitMQSamplerUI() {
