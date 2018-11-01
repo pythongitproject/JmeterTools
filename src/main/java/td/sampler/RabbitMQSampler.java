@@ -7,9 +7,12 @@ import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.TestStateListener;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -75,15 +78,8 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         }
         factory.setUsername(this.getUsername());
         factory.setPassword(this.getPassword());
-        String MQ_MSG = new StringBuilder()
-                .append("Host: ").append(this.getHost()).append("\n")
-                .append("VirtualHost: ").append(this.getVirtualHost()).append("\n")
-                .append("ExchangeType: ").append(this.getExchangeType()).append("\n")
-                .append("ExchangeName: ").append(this.getExchangeName()).append("\n")
-                .append("QueueName: ").append(this.getQueueName()).append("\n")
-                .append("Routingkey：").append(this.getRoutingkey()).append("\n")
-                .append("Durable：").append(this.getDurable()).append("\n")
-                .append("Message: ").append(this.getMessage()).append("\n").toString();
+        StringBuilder MQ_MSG = new StringBuilder();
+
 
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
@@ -93,18 +89,29 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
                 channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
                 channel.queueDeclare(this.getExchangeName(), false, false, false, null);
                 channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
+                MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
             }else if("direct".equals(this.getExchangeType().toLowerCase())) {
                 channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType(), Boolean.parseBoolean(this.getDurable()),false,null);
                 channel.queueBind(this.getQueueName(), this.getExchangeName(), this.getQueueName());
                 channel.basicPublish(this.getExchangeName(), this.getRoutingkey(), null, this.getMessage().getBytes("UTF-8"));
+                MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
             }else {
                 channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
                 channel.queueDeclare(this.getExchangeName(), false, false, false, null);
                 channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
+                MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
             }
             result.sampleEnd();
             result.setSuccessful(true);
-            result.setRequestHeaders(MQ_MSG);
+            MQ_MSG.append("Host: ").append(this.getHost()).append("\n")
+                    .append("VirtualHost: ").append(this.getVirtualHost()).append("\n")
+                    .append("ExchangeType: ").append(this.getExchangeType()).append("\n")
+                    .append("ExchangeName: ").append(this.getExchangeName()).append("\n")
+                    .append("QueueName: ").append(this.getQueueName()).append("\n")
+                    .append("Routingkey：").append(this.getRoutingkey()).append("\n")
+                    .append("Durable：").append(this.getDurable()).append("\n")
+                    .append("Message: ").append(this.getMessage()).append("\n");
+            result.setRequestHeaders(MQ_MSG.toString());
             result.setResponseData("MQ消息发送成功", "utf-8");
             result.setResponseCodeOK();
 
