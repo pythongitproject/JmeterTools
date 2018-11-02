@@ -24,10 +24,12 @@ public class RedisHashRemoveFunction extends AbstractFunction{
     static {
         desc.add(JMeterUtils.getResString("database"));
         desc.add(JMeterUtils.getResString("hash")); //$NON-NLS-1$
+        desc.add(JMeterUtils.getResString("key"));
     }
 
     private CompoundVariable database;
     private CompoundVariable hash;
+    private CompoundVariable key;
 
 
     /** {@inheritDoc} */
@@ -36,9 +38,10 @@ public class RedisHashRemoveFunction extends AbstractFunction{
             throws InvalidVariableException {
 
         String db = database.execute().trim();
-        String thekey = hash.execute().trim();
+        String hashs = hash.execute().trim();
+        String keys = key.execute().trim();
 
-        if (db ==null || db =="" || thekey ==null || thekey ==""){
+        if (db ==null || db =="" || hashs ==null || hashs ==""){
             return null;
         }else {
 
@@ -47,8 +50,14 @@ public class RedisHashRemoveFunction extends AbstractFunction{
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
             jedis.select(Integer.parseInt(database.execute().trim()));
-            Long randString = jedis.del(thekey);
-            return ""+randString;
+            String result = "";
+            if(keys ==null || keys==""){
+                result = jedis.del(hashs).toString();
+            }else {
+                result = jedis.hdel(hashs,keys).toString();
+            }
+
+            return ""+result;
         }
 
 
@@ -58,10 +67,11 @@ public class RedisHashRemoveFunction extends AbstractFunction{
     /** {@inheritDoc} */
     @Override
     public void setParameters(Collection<CompoundVariable> parameters) throws InvalidVariableException {
-        checkParameterCount(parameters, 2, 2);
+        checkParameterCount(parameters, 2, 3);
         Object[] values = parameters.toArray();
         database = (CompoundVariable)values[0];
         hash = (CompoundVariable) values[1];
+        key = (CompoundVariable) values[2];
 
     }
 
