@@ -9,6 +9,8 @@ import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.util.JMeterUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -73,12 +75,7 @@ public class IDCard extends AbstractFunction{
         date.set(Calendar.DATE, date.get(Calendar.DATE) - new Random().nextInt(365 * 100));
         //获取生日日期
         String birthday=dft1.format(date.getTime());
-        System.out.println(birthday);
-        String birth = dft.format(date.getTime());
-        String year = birth.substring(0,4);
-        if(Integer.parseInt(year)>1997){
-            birth = birth.replace(year,"1995");
-        }
+        String birth = LocalDateTime.now().minusYears(new Random().nextInt(52)+18).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         System.out.println(birth);
         // 随机生成顺序号 15-17
         String no = new Random().nextInt(899)+100 + "";
@@ -108,7 +105,7 @@ public class IDCard extends AbstractFunction{
 	 * 4 3 2。 5.通过上面得知如果余数是2，就会在身份证的第18位数字上出现罗马数字的Ⅹ。如果余数是10，身份证的最后一位号码就是2。
 	 *
 	 */
-        System.out.println(number);
+//        System.out.println(number);
         final int[] coef = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 };
         final int[] mapping = { 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 };
         int[] store = new int[18];
