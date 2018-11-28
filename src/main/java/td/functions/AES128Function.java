@@ -63,7 +63,7 @@ public class AES128Function extends AbstractFunction {
                 cipher.init(1, key);
                 byte[] result = cipher.doFinal(content.getBytes());
                 end = Base64.encodeBase64String(result);
-                System.out.println("AES:"+end);
+//                System.out.println("AES:"+end);
 
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();

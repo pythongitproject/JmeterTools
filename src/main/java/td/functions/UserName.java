@@ -104,7 +104,7 @@ public class UserName extends AbstractFunction{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("username:"+str);
+//        System.out.println("username:"+str);
         return str;
     }
 

@@ -31,7 +31,7 @@ public class IDCard extends AbstractFunction{
     @Override
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
         String[] IDCard = getIDCard();
-        System.out.println("IDCard:"+IDCard[0]);
+//        System.out.println("IDCard:"+IDCard[0]);
         if (varName != null) {
             JMeterVariables vars = getVariables();
             final String varTrim = varName.execute().trim();
@@ -76,7 +76,7 @@ public class IDCard extends AbstractFunction{
         //获取生日日期
         String birthday=dft1.format(date.getTime());
         String birth = LocalDateTime.now().minusYears(new Random().nextInt(52)+18).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        System.out.println(birth);
+//        System.out.println(birth);
         // 随机生成顺序号 15-17
         String no = new Random().nextInt(899)+100 + "";
 

@@ -66,7 +66,7 @@ public class MD5 extends AbstractFunction {
                         buf.append(Integer.toHexString(i));
                     }
                     //32位加密
-                    System.out.println("md5:"+buf.toString().toLowerCase());
+//                    System.out.println("md5:"+buf.toString().toLowerCase());
                     if (varName != null) {
                         JMeterVariables vars = getVariables();
                         final String varTrim = varName.execute().trim();

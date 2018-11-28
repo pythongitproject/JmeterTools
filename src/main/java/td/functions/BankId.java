@@ -34,7 +34,7 @@ public class BankId extends AbstractFunction{
         String cardCode1 = null;
         cardCode1 = new Random().nextInt(899999) + 1000000 + "";
         bankCard = bankCard + cardCode1;
-        System.out.println("bankCard:"+bankCard);
+//        System.out.println("bankCard:"+bankCard);
         if (varName != null) {
             JMeterVariables vars = getVariables();
             final String varTrim = varName.execute().trim();
