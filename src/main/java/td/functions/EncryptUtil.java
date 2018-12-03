@@ -97,7 +97,6 @@ public class EncryptUtil {
                 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
                 cipher.init(2, keySpec);
                 byte[] result = cipher.doFinal(Base64.decodeBase64(content));
-                System.out.println("rr" + new String(result));
                 return new String(result);
             } catch (NoSuchAlgorithmException var9) {
                 var9.printStackTrace();
