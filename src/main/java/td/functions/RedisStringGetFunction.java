@@ -1,5 +1,6 @@
 package td.functions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -39,20 +40,15 @@ public class RedisStringGetFunction extends AbstractFunction{
         String db = database.execute().trim();
         String thefield = key.execute().trim();
 
-        if (db ==null || db ==""|| thefield ==null || thefield =="") {
-
+        if (StringUtils.isBlank(db) || StringUtils.isBlank(thefield)) {
             return null;
         }else {
-
-
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
             jedis.select(Integer.parseInt(database.execute().trim()));
             String thekey = key.execute().trim();
-
             String randString = jedis.get(thekey);
-
 
             if (varName != null) {
                 JMeterVariables vars = getVariables();
@@ -62,7 +58,6 @@ public class RedisStringGetFunction extends AbstractFunction{
                 }
             }
 
-            System.out.println(randString);
             return randString;
 
         }

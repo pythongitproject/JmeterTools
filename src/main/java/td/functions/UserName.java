@@ -36,7 +36,6 @@ public class UserName extends AbstractFunction{
     @Override
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
         String realName = getXing();
-        System.out.println(realName);
         if (varName != null) {
             JMeterVariables vars = getVariables();
             final String varTrim = varName.execute().trim();
@@ -100,11 +99,10 @@ public class UserName extends AbstractFunction{
         bArr[0] = (new Integer(highPos)).byteValue();
         bArr[1] = (new Integer(lowPos)).byteValue();
         try {
-            str = new String(bArr, "UTF-8");	//区位码组合成汉字
+            str = new String(bArr);	//区位码组合成汉字
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        System.out.println("username:"+str);
         return str;
     }
 

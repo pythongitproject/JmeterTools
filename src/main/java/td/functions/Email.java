@@ -33,7 +33,6 @@ public class Email extends AbstractFunction{
         String[] end = {"@163.com","@qq.com","@tuandai.com"};
         String start = "ghabqcdefijhtrshsdfsfaarehndfauyksrtertwqazweerfef".substring((int)(Math.random()*5),(int)(Math.random()*5+15))+new Random().nextInt(10000)+new Random().nextInt(100);
         String email = start + end[new Random().nextInt(3)];
-        System.out.println("email:"+email);
         if (varName != null) {
             JMeterVariables vars = getVariables();
             final String varTrim = varName.execute().trim();

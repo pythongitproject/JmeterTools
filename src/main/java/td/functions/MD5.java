@@ -1,7 +1,7 @@
 package td.functions;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -47,8 +47,7 @@ public class MD5 extends AbstractFunction {
 
             String max = param.execute().trim();
             String sizes = size.execute().trim();
-        System.out.println("ff" + sizes + "dd");
-            if(max==null || max ==""){
+            if(StringUtils.isBlank(max)){
                 return null;
             }else {
                 try {

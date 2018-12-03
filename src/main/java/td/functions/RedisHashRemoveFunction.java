@@ -1,5 +1,6 @@
 package td.functions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -41,7 +42,7 @@ public class RedisHashRemoveFunction extends AbstractFunction{
         String hashs = hash.execute().trim();
         String keys = key.execute().trim();
 
-        if (db ==null || db =="" || hashs ==null || hashs ==""){
+        if (StringUtils.isBlank(db) || StringUtils.isBlank(hashs)){
             return null;
         }else {
 
@@ -51,7 +52,7 @@ public class RedisHashRemoveFunction extends AbstractFunction{
             jedis.connect();
             jedis.select(Integer.parseInt(database.execute().trim()));
             String result = "";
-            if(keys ==null || keys==""){
+            if(StringUtils.isBlank(keys)){
                 result = jedis.del(hashs).toString();
             }else {
                 result = jedis.hdel(hashs,keys).toString();

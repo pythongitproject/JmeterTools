@@ -1,6 +1,7 @@
 package td.functions;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -44,7 +45,7 @@ public class AES128Function extends AbstractFunction {
     @Override
     public String execute(SampleResult previousResult, Sampler currentSampler){
         String content = param.execute().trim();
-        if(content == null || content == ""){
+        if(StringUtils.isBlank(content)){
             return null;
         }else {
             String encryptKey = "thirdplatWebToFeifei20180727MSJDHDFHIERUI@U#$*%*#$@!@#(*(&*";

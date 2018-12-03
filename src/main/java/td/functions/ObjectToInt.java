@@ -1,5 +1,6 @@
 package td.functions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -40,7 +41,7 @@ public class ObjectToInt extends AbstractFunction {
     public String execute(SampleResult previousResult, Sampler currentSampler) throws InvalidVariableException {
 
             String s = param.execute().trim();
-            if(s==null || s ==""){
+            if(StringUtils.isBlank(s)){
                 return null;
             }else {
                     Number num = Float.parseFloat(s);

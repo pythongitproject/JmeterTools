@@ -1,5 +1,6 @@
 package td.functions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -45,7 +46,7 @@ public class RedisHashSetFunction extends AbstractFunction{
         String thefield = key.execute().trim();
         String thevalue = value.execute().trim();
 
-        if (db ==null || db =="" || thekey ==null || thekey =="" || thefield ==null || thefield =="" || thevalue ==null || thevalue ==""){
+        if (StringUtils.isBlank(db) || StringUtils.isBlank(thekey) || StringUtils.isBlank(thefield)|| StringUtils.isBlank(thevalue)){
             return null;
 
         }else {
@@ -55,11 +56,6 @@ public class RedisHashSetFunction extends AbstractFunction{
             jedis.connect();
             jedis.select(Integer.parseInt(db));
             Long count = jedis.hsetnx(thekey,thefield,thevalue);
-            if(count>0){
-                System.out.println("写入成功："+thekey+":"+thefield+":"+thevalue);
-            }else {
-                System.out.println("写入失败");
-            }
             return count.toString();
         }
 

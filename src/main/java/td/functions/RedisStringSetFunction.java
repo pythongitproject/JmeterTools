@@ -1,5 +1,6 @@
 package td.functions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.functions.AbstractFunction;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -41,17 +42,14 @@ public class RedisStringSetFunction extends AbstractFunction{
         String thefield = key.execute().trim();
         String thevalue = value.execute().trim();
 
-        if (db ==null || db ==""|| thefield ==null || thefield =="" || thevalue ==null || thevalue =="") {
+        if (StringUtils.isBlank(db) || StringUtils.isBlank(thefield) || StringUtils.isBlank(thevalue)) {
             return null;
         }else {
-
             Jedis jedis = new Jedis("node.td-k8s.com",1379);
             jedis.auth("mWRK6joVy5No");
             jedis.connect();
             jedis.select(Integer.parseInt(db));
             String randString = jedis.set(thefield,thevalue);
-
-            System.out.println(randString);
             return randString;
         }
 
