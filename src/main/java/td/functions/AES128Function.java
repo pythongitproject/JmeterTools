@@ -30,10 +30,12 @@ public class AES128Function extends AbstractFunction {
 
     static {
         desc.add(JMeterUtils.getResString("param"));
+        desc.add(JMeterUtils.getResString("ekey"));
         desc.add(JMeterUtils.getResString("function_name_paropt")); //$NON-NLS-1$
     }
 
     private CompoundVariable param;
+    private CompoundVariable ekey;
     private CompoundVariable varName;
 
 
@@ -45,57 +47,44 @@ public class AES128Function extends AbstractFunction {
     @Override
     public String execute(SampleResult previousResult, Sampler currentSampler){
         String content = param.execute().trim();
+        String encryptKey = ekey.execute().trim();
+
         if(StringUtils.isBlank(content)){
             return null;
-        }else {
-            String encryptKey = "thirdplatWebToFeifei20180727MSJDHDFHIERUI@U#$*%*#$@!@#(*(&*";
-            String end = "";
-
-            KeyGenerator generator = null;
-            try {
-                generator = KeyGenerator.getInstance("AES");
-                SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
-                secureRandom.setSeed(encryptKey.getBytes());
-                generator.init(128, secureRandom);
-                SecretKey secretKey = generator.generateKey();
-                byte[] enCodeFormat = secretKey.getEncoded();
-                SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
-                Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-                cipher.init(1, key);
-                byte[] result = cipher.doFinal(content.getBytes());
-                end = Base64.encodeBase64String(result);
-//                System.out.println("AES:"+end);
-
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                return "";
-            } catch (BadPaddingException e) {
-                e.printStackTrace();
-                return "";
-            } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-                return "";
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-                return "";
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-                return "";
-            }
-
-
+        }
+        if(StringUtils.isBlank(encryptKey)){
+            return null;
+        }
+        try {
+            SecretKeySpec secretKeySpec = new SecretKeySpec(encryptKey.getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            byte[] result = cipher.doFinal(content.getBytes());
+            String end = Base64.encodeBase64String(result);
             if (varName != null) {
                 JMeterVariables vars = getVariables();
                 final String varTrim = varName.execute().trim();
-                if (vars != null && varTrim.length() > 0) {// vars will be null on TestPlan
+                if (vars != null && varTrim.length() > 0) {
                     vars.put(varTrim, end);
                 }
             }
             return end;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+            return "";
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+            return "";
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+            return "";
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+            return "";
         }
-
-
-
 
 }
 
@@ -106,11 +95,12 @@ public class AES128Function extends AbstractFunction {
 
     @Override
     public void setParameters(Collection<CompoundVariable> parameters) throws InvalidVariableException {
-        checkParameterCount(parameters, 1, 2);
+        checkParameterCount(parameters, 2, 3);
         Object[] values = parameters.toArray();
         param = (CompoundVariable)values[0];
-        if (values.length>1){
-            varName = (CompoundVariable) values[1];
+        ekey = (CompoundVariable)values[1];
+        if (values.length>2){
+            varName = (CompoundVariable) values[2];
         } else {
             varName = null;
         }

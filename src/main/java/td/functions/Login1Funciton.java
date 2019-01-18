@@ -38,7 +38,7 @@ public class Login1Funciton extends AbstractFunction {
             return null;
         }else {
             String timeValue = DateFormatUtils.format(new Date(), "yyyy/MM/dd HH:mm:ss");
-            String userValue = s + "|" + timeValue + "|" + "-Chrome";
+            String userValue = s.toUpperCase() + "|" + timeValue + "|" + "-Chrome";
             String a1 = Cryptography.tripleDESEncrypt(userValue, SECRET);
             try {
                 String fn = URLEncoder.encode(a1, "UTF-8");

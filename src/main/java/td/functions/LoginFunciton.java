@@ -37,7 +37,7 @@ public class LoginFunciton extends AbstractFunction {
         if(StringUtils.isBlank(s)){
             return null;
         }else {
-            String a1 = Cryptography.tripleDESEncrypt(s, SECRET);
+            String a1 = Cryptography.tripleDESEncrypt(s.toUpperCase(), SECRET);
             try {
                 String fn = URLEncoder.encode(a1, "UTF-8");
                 if (varName != null) {
