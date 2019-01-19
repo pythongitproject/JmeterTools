@@ -3,6 +3,7 @@ package td.sampler;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
@@ -70,14 +71,14 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(this.getHost());
-        if (this.getPort() != null) {
-            factory.setPort(Integer.parseInt(this.getPort()));
+        if (StringUtils.isNotBlank(this.getPort())) {
+            factory.setPort(Integer.parseInt(this.getPort().trim()));
         }
-        if (this.getVirtualHost() != null) {
-            factory.setVirtualHost(this.getVirtualHost());
+        if (StringUtils.isNotBlank(this.getVirtualHost())) {
+            factory.setVirtualHost(this.getVirtualHost().trim());
         }
-        factory.setUsername(this.getUsername());
-        factory.setPassword(this.getPassword());
+        factory.setUsername(this.getUsername().trim());
+        factory.setPassword(this.getPassword().trim());
         StringBuilder MQ_MSG = new StringBuilder();
 
 
@@ -86,19 +87,19 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         try {
 
             if("fanout".equals(this.getExchangeType().toLowerCase())){
-                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
-                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
-                channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
+                channel.exchangeDeclare(this.getExchangeName().trim(), this.getExchangeType().toLowerCase());
+                channel.queueDeclare(this.getExchangeName().trim(), false, false, false, null);
+                channel.basicPublish(this.getExchangeName().trim(), "", null, this.getMessage().getBytes("UTF-8"));
                 MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
             }else if("direct".equals(this.getExchangeType().toLowerCase())) {
-                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType(), Boolean.parseBoolean(this.getDurable()),false,null);
-                channel.queueBind(this.getQueueName(), this.getExchangeName(), this.getQueueName());
-                channel.basicPublish(this.getExchangeName(), this.getRoutingkey(), null, this.getMessage().getBytes("UTF-8"));
+                channel.exchangeDeclare(this.getExchangeName().trim(), this.getExchangeType().trim(), Boolean.parseBoolean(this.getDurable().trim()),false,null);
+                channel.queueBind(this.getQueueName().trim(), this.getExchangeName().trim(), this.getQueueName().trim());
+                channel.basicPublish(this.getExchangeName().trim(), this.getRoutingkey().trim(), null, this.getMessage().trim().getBytes("UTF-8"));
                 MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
             }else {
-                channel.exchangeDeclare(this.getExchangeName(), this.getExchangeType().toLowerCase());
-                channel.queueDeclare(this.getExchangeName(), false, false, false, null);
-                channel.basicPublish(this.getExchangeName(), "", null, this.getMessage().getBytes("UTF-8"));
+                channel.exchangeDeclare(this.getExchangeName().trim(), this.getExchangeType().toLowerCase().trim());
+                channel.queueDeclare(this.getExchangeName().trim(), false, false, false, null);
+                channel.basicPublish(this.getExchangeName().trim(), "", null, this.getMessage().getBytes("UTF-8"));
                 MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
             }
             result.sampleEnd();
@@ -110,7 +111,7 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
                     .append("QueueName: ").append(this.getQueueName()).append("\n")
                     .append("Routingkey：").append(this.getRoutingkey()).append("\n")
                     .append("Durable：").append(this.getDurable()).append("\n")
-                    .append("Message: ").append(this.getMessage()).append("\n");
+                    .append("Message: ").append("\n").append(this.getMessage()).append("\n");
             result.setRequestHeaders(MQ_MSG.toString());
             result.setResponseData("MQ消息发送成功", "utf-8");
             result.setResponseCodeOK();
