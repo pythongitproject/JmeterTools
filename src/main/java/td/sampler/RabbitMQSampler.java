@@ -81,13 +81,15 @@ public class RabbitMQSampler extends AbstractSampler implements TestStateListene
         factory.setPassword(this.getPassword().trim());
         StringBuilder MQ_MSG = new StringBuilder();
 
-
+        if(StringUtils.isBlank(this.getDurable().trim())){
+            this.setDurable("false");
+        }
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
         try {
 
             if("fanout".equals(this.getExchangeType().toLowerCase())){
-                channel.exchangeDeclare(this.getExchangeName().trim(), this.getExchangeType().toLowerCase());
+                channel.exchangeDeclare(this.getExchangeName().trim(), this.getExchangeType().toLowerCase(),Boolean.parseBoolean(this.getDurable().trim()));
                 channel.queueDeclare(this.getExchangeName().trim(), false, false, false, null);
                 channel.basicPublish(this.getExchangeName().trim(), "", null, this.getMessage().getBytes("UTF-8"));
                 MQ_MSG.append("SendTime: ").append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date())).append("\n");
