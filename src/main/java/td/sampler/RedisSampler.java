@@ -28,13 +28,15 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
     /**
      * 基本参数
      */
-    private static final String Host = "node.td-k8s.com";
-    private static final String Port = "1379";
-    private static final String Password = "mWRK6joVy5No";
-    private static final String Db = "5";
-    private static final String Hash = "";
-    private static final String Key = "";
-    private static final String Value = "";
+    public static final String Host = "node.td-k8s.com";
+    public static final String Port = "1379";
+    public static final String Password = "mWRK6joVy5No";
+    public static final String Db = "5";
+    public static final String RType= "String";
+    public static final String RDoType = "SET";
+    public static final String Hash = "";
+    public static final String Key = "";
+    public static final String ValueBody = "";
 
 
     public RedisSampler(){
@@ -65,20 +67,28 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
 
     private void doRedis(SampleResult result){
 
+        logger.info("host: {}" ,this.getHost());
+        logger.info("post: {}" ,this.getPort());
+        logger.info("pwd: {}" ,this.getPassword());
+        logger.info("rtype: {}" ,this.getRType());
+        logger.info("rdotype: {}" ,this.getRDoType());
+        logger.info("hash: {}" ,this.getHash());
+        logger.info("key: {}" ,this.getKey());
+        logger.info("value: {}" ,this.getValueBody());
 
         StringBuilder msg = new StringBuilder();
         try {
-            Jedis jedis = new Jedis(this.getHost(), Integer.parseInt(this.getPort()));
-            jedis.auth(this.getPassword());
-            jedis.connect();
-            jedis.select(Integer.parseInt(this.getDb()));
-
-//            Long count = jedis.zadd(thekey, Double.parseDouble(thefield),thevalue);
+//            Jedis jedis = new Jedis(this.getHost(), Integer.parseInt(this.getPort()));
+//            jedis.auth(this.getPassword());
+//            jedis.connect();
+//            jedis.select(Integer.parseInt(this.getDb()));
+//
+////            Long count = jedis.zadd(thekey, Double.parseDouble(thefield),thevalue);
 
             result.sampleEnd();
             result.setSuccessful(true);
             result.setRequestHeaders(msg.toString());
-            result.setResponseData("MQ消息发送成功", "utf-8");
+            result.setResponseData("执行完毕", "utf-8");
             result.setResponseCodeOK();
 
         } catch (Exception e) {
@@ -95,10 +105,9 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
 
     }
 
-    public  String getHost() {
-        return getPropertyAsString(Host);
-    }
 
+
+    public  String getHost() { return getPropertyAsString(Host); }
     public  void setHost(String host) {
         setProperty(Host,host);
     }
@@ -106,22 +115,24 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
     public String getPort() {
         return getPropertyAsString(Port);
     }
-
     public  void setPort(String port) {
         setProperty(Port,port);
     }
+
     public  String getPassword() {
         return getPropertyAsString(Password);
     }
     public  void setPassword(String password) {
         setProperty(Password,password);
     }
+
     public  String getDb() {
         return getPropertyAsString(Db);
     }
     public  void setDb(String db) {
         setProperty(Db,db);
     }
+
     public  String getHash() {
         return getPropertyAsString(Hash);
     }
@@ -136,24 +147,44 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
         setProperty(Key,key);
     }
 
-    public  String getValue() {
-        return getPropertyAsString(Value);
+    public  String getValueBody() {
+        return getPropertyAsString(ValueBody);
     }
-    public  void setValue(String value) {
-        setProperty(Value,value);
+    public  void setValueBody(String valueBody) {
+        setProperty(ValueBody,valueBody);
+    }
+
+    public String getRType() {
+        return getPropertyAsString(RType);
+    }
+    public  void setRType(String rType) {
+        setProperty(RType,rType);
+    }
+
+    public String getRDoType() {
+        return getPropertyAsString(RDoType);
+    }
+    public  void setRDoType(String rDoType) {
+        setProperty(RDoType,rDoType);
     }
 
     @Override
-    public void testStarted() {}
+    public void testStarted() {
+
+    }
 
     @Override
-    public void testStarted(String s) {}
+    public void testStarted(String s) {
+
+    }
 
     @Override
-    public void testEnded() {}
+    public void testEnded() {
+
+    }
 
     @Override
-    public void testEnded(String s) {}
+    public void testEnded(String s) {
 
-
+    }
 }
