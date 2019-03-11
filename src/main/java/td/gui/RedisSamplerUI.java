@@ -35,7 +35,7 @@ public class RedisSamplerUI extends AbstractSamplerGui {
     private JSyntaxTextArea ValueBody = JSyntaxTextArea.getInstance(30, 50);
     // 滚动条
     private JTextScrollPane textPanel = JTextScrollPane.getInstance(ValueBody);
-    private JLabel textArea = new JLabel("Value:");
+//    private JLabel textArea = new JLabel("Value:");
 
     private JPanel getHostPanel() {
         Host = new JTextField(4);
@@ -136,10 +136,10 @@ public class RedisSamplerUI extends AbstractSamplerGui {
         JPanel panel = new HorizontalPanel();
         JPanel ContentPanel = new VerticalPanel();
         JPanel messageContentPanel = new JPanel(new BorderLayout());
-        messageContentPanel.add(this.textArea, BorderLayout.NORTH);
+//        messageContentPanel.add(this.textArea, BorderLayout.NORTH);
         messageContentPanel.add(this.textPanel, BorderLayout.CENTER);
         ContentPanel.add(messageContentPanel);
-        ContentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray), "Parameters"));
+        ContentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray), "Value:"));
         panel.add(ContentPanel);
         return panel;
     }
@@ -163,7 +163,6 @@ public class RedisSamplerUI extends AbstractSamplerGui {
         settingPanel.add(getPasswordPanel());
         settingPanel.add(getDbPanel());
         settingPanel.add(getRTypeAndRDoType());
-//        settingPanel.add(getRDoType());
         settingPanel.add(getHashPanel());
         settingPanel.add(getKeyPanel());
         settingPanel.add(getValueContent());
