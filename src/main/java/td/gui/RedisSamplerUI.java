@@ -98,19 +98,6 @@ public class RedisSamplerUI extends AbstractSamplerGui {
         return panel;
     }
 
-    protected Component getRDoType() {
-        JLabel rdlabel = new JLabel("操作:");
-        RDoType =  new JLabeledChoice();
-        RDoType.addValue("SET");
-        RDoType.addValue("GET");
-        RDoType.addValue("DEL");
-        JPanel panel = new HorizontalPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panel.add(rdlabel,BorderLayout.WEST);
-        panel.add(RDoType, BorderLayout.CENTER);
-        return panel;
-    }
-
     private JPanel getHashPanel() {
         Hash = new JTextField(2);
         JLabel label = new JLabel("Hash:");
@@ -180,6 +167,7 @@ public class RedisSamplerUI extends AbstractSamplerGui {
     @Override
     public TestElement createTestElement() {
 // TODO Auto-generated method stub
+        log.info("createTestElement");
         RedisSampler sampler = new RedisSampler();
         this.setupSamplerProperties(sampler);
         return sampler;
@@ -187,12 +175,14 @@ public class RedisSamplerUI extends AbstractSamplerGui {
 
     @Override
     public String getLabelResource() {
+        log.info("getLabelResource");
 // TODO Auto-generated method stub
         throw new IllegalStateException("This shouldn't be called");
     }
 
     @Override
     public String getStaticLabel() {
+        log.info("getStaticLabel");
         return "Redis Sampler";
     }
 
@@ -201,12 +191,16 @@ public class RedisSamplerUI extends AbstractSamplerGui {
      * */
     @Override
     public void modifyTestElement(TestElement testElement) {
+        log.info("modifyTestElement");
         RedisSampler sampler = (RedisSampler) testElement;
         this.setupSamplerProperties(sampler);
     }
 
     private void setupSamplerProperties(RedisSampler sampler) {
         this.configureTestElement(sampler);
+        log.info("setupSamplerProperties: hash{}",this.Hash.getText());
+        log.info("setupSamplerProperties: key{}",this.Key.getText());
+        log.info("setupSamplerProperties: value{}",this.ValueBody.getText());
         sampler.setHost(this.Host.getText());
         sampler.setPort(this.Port.getText());
         sampler.setPassword(this.Password.getText());
@@ -224,6 +218,7 @@ public class RedisSamplerUI extends AbstractSamplerGui {
     @Override
     public void clearGui() {
         super.clearGui();
+        log.info("clearGui");
         Host.setText("node.td-k8s.com");
         Port.setText("1379");
         Password.setText("mWRK6joVy5No");
@@ -242,6 +237,9 @@ public class RedisSamplerUI extends AbstractSamplerGui {
     public void configure(TestElement element) {
         super.configure(element);
         RedisSampler sampler = (RedisSampler) element;
+        log.info("configure: hash{}",sampler.getHash());
+        log.info("configure: key{}",sampler.getKey());
+        log.info("configure: value{}",sampler.getValueBody());
         // jmeter运行后，保存参数，不然执行后，输入框会情况
         this.Host.setText(sampler.getHost());
         this.Port.setText(sampler.getPort());
