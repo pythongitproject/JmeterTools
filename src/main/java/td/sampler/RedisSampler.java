@@ -1,47 +1,95 @@
 package td.sampler;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import org.apache.commons.lang.StringUtils;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
-import org.apache.jmeter.testelement.TestStateListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by linweili on 2018/7/6/0006.
- */
-public class RedisSampler extends AbstractSampler implements TestStateListener {
+public class RedisSampler extends AbstractSampler{
+    private static final long serialVersionUID = 240L;
 
-    private static final Logger logger = LoggerFactory.getLogger(RedisSampler.class);
+    private static final Logger log = LoggerFactory.getLogger(RedisSampler.class);
 
+    // The name of the property used to hold our data
+    public static final String host = "host.text";
+    public static final String port = "port.text";
+    public static final String pwd = "pwd.text";
+    public static final String db = "db.text";
+    public static final String rtype = "rtype.text";
+    public static final String rdotype = "rdotype.text";
+    public static final String hash = "hash.text";
+    public static final String key = "key.text";
+    public static final String valueContent = "valueContent.text";
+
+    private static AtomicInteger classCount = new AtomicInteger(0); // keep track of classes created
+
+
+    private String getTitle() {
+        return this.getName();
+    }
 
     /**
-     * 基本参数
+     * @return the data for the sample
      */
-    public static final String Host = "node.td-k8s.com";
-    public static final String Port = "1379";
-    public static final String Password = "mWRK6joVy5No";
-    public static final String Db = "5";
-    public static final String RType= "String";
-    public static final String RDoType = "SET";
-    public static final String Hash = "";
-    public static final String Key = "";
-    public static final String ValueBody = "";
+    public String gethost() {
+        return getPropertyAsString(host);
+        //从gui获取host输入的数据
+    }
+
+    public String getport() {
+        return getPropertyAsString(port);
+        //从gui获取port输入的数据
+    }
+
+    public String getpwd() {
+        return getPropertyAsString(pwd);
+
+    }
+
+    public String getdb() {
+        return getPropertyAsString(db);
+
+    }
+
+    public String getrtype() {
+        return getPropertyAsString(rtype);
+
+    }
+
+    public String getrdotype() {
+        return getPropertyAsString(rdotype);
+
+    }
+
+    public String gethash() {
+        return getPropertyAsString(hash);
+
+    }
+
+    public String getkey() {
+        return getPropertyAsString(key);
+
+    }
+
+    public String getvalueContent() {
+        return getPropertyAsString(valueContent);
+
+    }
 
 
-    public RedisSampler(){
-        //设置Sampler名称
+    public RedisSampler() {
+        //getTitle方法会调用getName方法，setName不写会默认调用getStaticLabel返回的name值
         setName("Redis Sampler");
+        classCount.incrementAndGet();
+        trace("FirstPluginSampler()");
+    }
+    private void trace(String s) {
+        String tl = getTitle();
+        String tn = Thread.currentThread().getName();
+        String th = this.toString();
     }
 
     @Override
@@ -67,14 +115,14 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
 
     private void doRedis(SampleResult result){
 
-        logger.info("host: {}" ,this.getHost());
-        logger.info("post: {}" ,this.getPort());
-        logger.info("pwd: {}" ,this.getPassword());
-        logger.info("rtype: {}" ,this.getRType());
-        logger.info("rdotype: {}" ,this.getRDoType());
-        logger.info("hash: {}" ,this.getHash());
-        logger.info("key: {}" ,this.getKey());
-        logger.info("value: {}" ,this.getValueBody());
+        log.info("host: {}" ,this.gethost());
+        log.info("post: {}" ,this.getport());
+        log.info("pwd: {}" ,this.getpwd());
+        log.info("rtype: {}" ,this.getrtype());
+        log.info("rdotype: {}" ,this.getrdotype());
+        log.info("hash: {}" ,this.gethash());
+        log.info("key: {}" ,this.getkey());
+        log.info("value: {}" ,this.getvalueContent());
 
         StringBuilder msg = new StringBuilder();
         try {
@@ -105,86 +153,4 @@ public class RedisSampler extends AbstractSampler implements TestStateListener {
 
     }
 
-
-
-    public  String getHost() { return getPropertyAsString(Host); }
-    public  void setHost(String host) {
-        setProperty(Host,host);
-    }
-
-    public String getPort() {
-        return getPropertyAsString(Port);
-    }
-    public  void setPort(String port) {
-        setProperty(Port,port);
-    }
-
-    public  String getPassword() {
-        return getPropertyAsString(Password);
-    }
-    public  void setPassword(String password) {
-        setProperty(Password,password);
-    }
-
-    public  String getDb() {
-        return getPropertyAsString(Db);
-    }
-    public  void setDb(String db) {
-        setProperty(Db,db);
-    }
-
-    public  String getHash() {
-        return getPropertyAsString(Hash);
-    }
-    public  void setHash(String hash) {
-        setProperty(Hash,hash);
-    }
-
-    public  String getKey() {
-        return getPropertyAsString(Key);
-    }
-    public  void setKey(String key) {
-        setProperty(Key,key);
-    }
-
-    public  String getValueBody() {
-        return getPropertyAsString(ValueBody);
-    }
-    public  void setValueBody(String valueBody) {
-        setProperty(ValueBody,valueBody);
-    }
-
-    public String getRType() {
-        return getPropertyAsString(RType);
-    }
-    public  void setRType(String rType) {
-        setProperty(RType,rType);
-    }
-
-    public String getRDoType() {
-        return getPropertyAsString(RDoType);
-    }
-    public  void setRDoType(String rDoType) {
-        setProperty(RDoType,rDoType);
-    }
-
-    @Override
-    public void testStarted() {
-
-    }
-
-    @Override
-    public void testStarted(String s) {
-
-    }
-
-    @Override
-    public void testEnded() {
-
-    }
-
-    @Override
-    public void testEnded(String s) {
-
-    }
 }
