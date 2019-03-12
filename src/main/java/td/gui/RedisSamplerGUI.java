@@ -82,8 +82,8 @@ public class RedisSamplerGUI extends AbstractSamplerGui {
         rtype =  new JLabeledChoice();
         rtype.addValue("String");
         rtype.addValue("Hash");
-        rtype.addValue("Set");
-        rtype.addValue("ZSet");
+//        rtype.addValue("Set");
+//        rtype.addValue("ZSet");
 
         JLabel rdlabel = new JLabel("操作:");
         rdotype =  new JLabeledChoice();
